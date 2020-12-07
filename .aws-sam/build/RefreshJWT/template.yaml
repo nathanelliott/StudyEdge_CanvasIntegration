@@ -1,0 +1,79 @@
+# template.yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Serverless Canvas Integration Demo
+Globals:
+  Function:
+    Runtime: nodejs12.x
+    Timeout: 30
+    MemorySize: 128
+Resources:
+  # Create Resources Access Policy
+  ChimeMeetingsAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ChimeMeetingsAccess
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'chime:CreateMeeting'
+              - 'chime:DeleteMeeting'
+              - 'chime:GetMeeting'
+              - 'chime:ListMeetings'
+              - 'chime:BatchCreateAttendee'
+              - 'chime:CreateAttendee'
+              - 'chime:DeleteAttendee'
+              - 'chime:GetAttendee'
+              - 'chime:ListAttendees'
+            Resource: '*'
+      Roles:
+        # Which lambda roles will have this policy
+        - Ref: MeetingJoinLambdaRole
+        - Ref: MeetingEndLambdaRole
+  CreateJWT:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handlers.createJWT
+      Environment:
+        Variables:
+          MYSQL_HOST: default
+          MYSQL_PASSWORD: default
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /api/v1/jwts
+            Method: POST
+  # End function definition
+  RefreshJWT:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handlers.refreshJWT
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /api/v1/jwts/refresh
+            Method: POST
+  CatchAll:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handlers.catchAll
+      Events:
+        ApiG:
+          Type: Api
+          Properties:
+            Path: /api/catchall
+            Method: GET
+        ApiP:
+          Type: Api
+          Properties:
+            Path: /api/catchall
+            Method: POST
+Outputs:
+  ApiURL:
+    Description: "API endpoint URL for Prod environment"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/"
+   

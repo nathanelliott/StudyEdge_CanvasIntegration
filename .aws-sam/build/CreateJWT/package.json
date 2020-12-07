@@ -1,0 +1,22 @@
+{
+  "name": "studyedge_canvasintegration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nathanelliott/StudyEdge_CanvasIntegration.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nathanelliott/StudyEdge_CanvasIntegration/issues"
+  },
+  "homepage": "https://github.com/nathanelliott/StudyEdge_CanvasIntegration#readme",
+  "dependencies": {
+    "serverless-aws-static-file-handler": "^2.0.6"
+  }
+}
